@@ -1,0 +1,17 @@
+---
+- name: Vérifier et créer un fichier si nécessaire
+  hosts: localhost # Peut être localhost ou un groupe dans l'inventaire
+  become: true
+
+  tasks:
+    - name: Vérifier si le fichier existe
+      stat:
+        path: /tmp/fichier_test.txt
+      register: fichier_existe
+
+    - name: Créer le fichier avec un contenu par défaut s'il n'existe pas
+      copy:
+        dest: /tmp/fichier_test.txt
+        content: "Ceci est un fichier créé automatiquement par Ansible.\n"
+        mode: '0644'
+      when: not fichier_existe.stat.exists
